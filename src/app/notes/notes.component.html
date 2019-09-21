@@ -2,15 +2,16 @@
   <!-- Note menu -->
   <div class="row" style="margin-top:12px;">
     <div class="col-md-8">
-      <input type="text" class="form-control" style="width: 100%;" placeholder="Search notes...">
+      <input type="text" [(ngModel)]="searchText" class="form-control" style="width: 100%;"
+        placeholder="Search notes..." />
     </div>
     <div class="col-md-4">
-      <button type="button" (click)="createNotebook()" class="btn btn-info pull-right" style="margin-left:12px;"><i
-          class="fa fa-plus"> New
-          notebook</i>
+      <button type="button" (click)="createNotebook()" class="btn btn-info pull-right" style="margin-left:12px;">
+        <i class="fa fa-plus"> New notebook</i>
       </button>
-      <button type="button" class="btn btn-warning pull-right" style="margin-left:12px;"><i class="fa fa-plus"> New
-          note</i>
+      <button type="button" (click)="createNote(selectedNotebook.id)" [disabled]="selectedNotebook == null"
+        class="btn btn-warning pull-right" style="margin-left:12px;">
+        <i class="fa fa-plus"> New note</i>
       </button>
     </div>
   </div>
@@ -19,16 +20,17 @@
   <div class="row" style="margin-top: 28px;">
     <!-- Notebooks Menu -->
     <div class="col-md-3">
-      <br>
+      <br />
       <div class="list-group list-group-flush">
-        <a class="list-group-item list-group-item-action">
+        <a (click)="selectAllNotes()" class="list-group-item list-group-item-action">
           <i class="fa fa-book"></i>&nbsp;All
         </a>
         <!-- Notebooks List -->
-        <a *ngFor="let notebook of notebooks" class="list-group-item list-group-item-action">
+        <a *ngFor="let notebook of notebooks" (click)="selectNotebook(notebook)"
+          class="list-group-item list-group-item-action">
           <i class="fa fa-book"></i>&nbsp;
           <input [(ngModel)]="notebook.name" (change)="updateNotebook(notebook)" type="text" class="input-label"
-            style="width: 80%;">
+            style="width: 80%;" />
           <a (click)="deleteNotebook(notebook)" class="pull-right text-danger">
             <i class="fa fa-trash-o"></i>
           </a>
@@ -41,26 +43,17 @@
       <div class="row">
         <div class="col-md-12">
           <!-- Message if there are no notes -->
-          <p *ngIf="this.notes.length === 0">No hay notas para mostrar a este notebook.</p>
+          <h3 *ngIf="selectedNotebook != null">{{selectedNotebook.name}}</h3>
+          <h3 *ngIf="selectedNotebook == null">Todas las notas</h3>
+          <p *ngIf="this.notes.length === 0">
+            No hay notas para mostrar en este notebook.
+          </p>
         </div>
       </div>
       <div class="row">
         <!-- Note List -->
-        <div *ngFor="let note of notes" class="card bg-warning" style="border: 4px solid white;">
-          <div class="card-body" style="padding: 8px; margin-top: 8px;">
-            <div>
-              <!--title-->
-              <input type="text" [(ngModel)]="note.title" class="input-label-lg" maxlength="18" style="width: 80%" />
-              <a (click)="deleteNote(note)" class="pull-right text-danger">
-                <i class="fa fa-trash-o"></i>
-              </a>
-            </div>
-            <!--Text-->
-            <textarea class="input-label" style="width: 100%" rows="6"
-            [(ngModel)]="note.text"></textarea>
-            <strong class="text-info" style="font-size: small"></strong>
-          </div>
-        </div>
+        <app-note *ngFor="let n of notes | noteTextFilter: searchText" [note]="n" (noteUpdated)="updateNote($event)"
+          (noteDeleted)="deleteNote($event)"></app-note>
       </div>
     </div>
   </div>

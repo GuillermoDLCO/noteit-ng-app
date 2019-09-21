@@ -9,6 +9,8 @@ import { NotesComponent } from './notes/notes.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NoteComponent } from './notes/note/note.component';
+import { NoteTextFilterPipe } from './shared/note-text-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { HttpClientModule } from '@angular/common/http';
     NavigationComponent,
     FeedbackComponent,
     NotesComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    NoteComponent,
+    NoteTextFilterPipe
   ],
   imports: [
     BrowserModule,
